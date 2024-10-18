@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -29,6 +23,8 @@ model Page {
   name           String
   companyWebsite String
   supportUrl     String
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 }
 
 model Component {
@@ -36,7 +32,7 @@ model Component {
   page          Page       @relation(fields: [pageId], references: [id])
   pageId        Int
   name          String
-  status        Int        @default(0)
+  status        String     @default("OPERATIONAL")
   description   String
   displayUptime Boolean    @default(true)
   createdAt     DateTime   @default(now())
@@ -48,16 +44,21 @@ model Incident {
   Component   Component        @relation(fields: [componentId], references: [id])
   componentId Int
   name        String
-  scheduletAt DateTime
-  status      Int              @default(0)
+  scheduleAt  DateTime?
+  resolvedAt  DateTime?
+  status      String           @default("INVESTIGATING")
+  severity    String           @default("MINOR")
   history     IncidentStatus[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
 }
 
 model IncidentStatus {
   id            Int      @id @default(autoincrement())
   Incident      Incident @relation(fields: [incidentId], references: [id])
   incidentId    Int
-  createdAt     DateTime @default(now())
   status        Int      @default(0)
   statusMessage String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
