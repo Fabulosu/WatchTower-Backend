@@ -18,6 +18,17 @@ export class PageService {
     async getPage(id: number) {
         const page = await this.prisma.page.findUnique({
             where: { id },
+            include: {
+                components: {
+                    include: {
+                        incidents: {
+                            include: {
+                                history: true,
+                            }
+                        }
+                    }
+                },
+            }
         });
         if (!page) throw new NotFoundException('Page not found');
         return page;

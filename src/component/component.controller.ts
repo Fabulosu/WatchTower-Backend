@@ -5,22 +5,25 @@ import { CreateComponentDto, UpdateComponentDto } from './dto/component.dto';
 import { Request } from 'express';
 
 @Controller('component')
-@UseGuards(JwtGuard)
+// @UseGuards(JwtGuard)
 export class ComponentController {
     constructor(private componentService: ComponentService) { }
 
+    @UseGuards(JwtGuard)
     @Post(':pageId')
     async createComponent(@Body() dto: CreateComponentDto, @Param('pageId') pageId: number, @Req() req: Request) {
         const userId = req['user'].id;
         return await this.componentService.createComponent(dto, userId, pageId);
     }
 
+    @UseGuards(JwtGuard)
     @Put(':id')
     async updateComponent(@Param('id') id: number, @Body() dto: UpdateComponentDto, @Req() req: Request) {
         const userId = req['user'].id;
         return await this.componentService.updateComponent(id, dto, userId);
     }
 
+    @UseGuards(JwtGuard)
     @Delete(':id')
     async deleteComponent(@Param('id') id: number, @Req() req: Request) {
         const userId = req['user'].id;
@@ -29,8 +32,7 @@ export class ComponentController {
 
     @Get('page/:pageId')
     async getComponents(@Param('pageId') pageId: number, @Req() req: Request) {
-        const userId = req['user'].id;
-        return await this.componentService.getComponents(pageId, userId);
+        return await this.componentService.getComponents(pageId);
     }
 
     @Get(':id')

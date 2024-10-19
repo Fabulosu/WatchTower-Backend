@@ -32,7 +32,7 @@ model Component {
   page          Page       @relation(fields: [pageId], references: [id])
   pageId        Int
   name          String
-  status        String     @default("OPERATIONAL")
+  status        Int        @default(0)
   description   String
   displayUptime Boolean    @default(true)
   createdAt     DateTime   @default(now())

@@ -69,11 +69,10 @@ export class ComponentService {
         });
     }
 
-    async getComponents(pageId: number, userId: number) {
+    async getComponents(pageId: number) {
         const page = await this.prisma.page.findFirst({
             where: {
                 id: pageId,
-                userId,
             },
         });
 

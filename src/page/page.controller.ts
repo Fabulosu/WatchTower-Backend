@@ -3,12 +3,13 @@ import { PageService } from './page.service';
 import { CreatePageDto, UpdatePageDto } from './dto/page.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 
+// @UseGuards(JwtGuard)
 @Controller('page')
-@UseGuards(JwtGuard)
 export class PageController {
     constructor(private pageService: PageService) { }
 
     @Post()
+    @UseGuards(JwtGuard)
     async createPage(@Body() dto: CreatePageDto, @Req() req: Request) {
         const userId = req['user'].id;
         if (!userId) {
@@ -23,11 +24,13 @@ export class PageController {
     }
 
     @Put(':id')
+    @UseGuards(JwtGuard)
     async updatePage(@Param('id') id: number, @Body() dto: UpdatePageDto) {
         return await this.pageService.updatePage(id, dto);
     }
 
     @Delete(':id')
+    @UseGuards(JwtGuard)
     async deletePage(@Param('id') id: number) {
         return await this.pageService.deletePage(id);
     }

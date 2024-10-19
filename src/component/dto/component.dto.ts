@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateComponentDto {
     @IsString()
@@ -10,8 +10,8 @@ export class CreateComponentDto {
     description: string;
 
     @IsOptional()
-    @IsString()
-    status: string;
+    @IsInt()
+    status?: number;
 
     @IsOptional()
     @IsBoolean()
@@ -28,8 +28,8 @@ export class UpdateComponentDto {
     description?: string;
 
     @IsOptional()
-    @IsString()
-    status?: string;
+    @IsInt()
+    status?: number;
 
     @IsOptional()
     @IsBoolean()
