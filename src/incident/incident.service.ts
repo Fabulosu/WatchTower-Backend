@@ -6,37 +6,54 @@ import { CreateIncidentDto, UpdateIncidentDto } from './dto/incident.dto';
 export class IncidentService {
     constructor(private prisma: PrismaService) { }
 
-    async createIncident(dto: CreateIncidentDto, userId: number, componentId: number) {
-        const component = await this.prisma.component.findFirst({
+    async createIncident(dto: CreateIncidentDto, userId: number, componentIds: number[]) {
+        const components = await this.prisma.component.findMany({
             where: {
-                id: componentId,
+                id: { in: componentIds },
                 page: {
                     userId,
                 },
             },
         });
 
-        if (!component) {
-            throw new UnauthorizedException('This component does not belong to you.');
+        if (components.length === 0 || components.length !== componentIds.length) {
+            throw new UnauthorizedException('Some components do not belong to you.');
         }
 
-        return this.prisma.incident.create({
+        const incident = await this.prisma.incident.create({
             data: {
-                ...dto,
-                Component: {
-                    connect: { id: componentId },
+                name: dto.name,
+                severity: dto.severity,
+                scheduleAt: dto.scheduleAt ? new Date(dto.scheduleAt) : undefined,
+                resolvedAt: dto.resolvedAt ? new Date(dto.resolvedAt) : undefined,
+                status: dto.status || 'OPEN',
+                components: {
+                    connect: componentIds.map((id) => ({ id })),
                 },
             },
         });
+
+        await this.prisma.incidentStatus.create({
+            data: {
+                incidentId: incident.id,
+                status: dto.statusCode || 0,
+                statusMessage: dto.statusMessage || 'We are currently investigating this issue and will provide updates as soon as possible.',
+            },
+        });
+
+        return incident;
+
     }
 
     async updateIncident(id: number, dto: UpdateIncidentDto, userId: number) {
         const incident = await this.prisma.incident.findFirst({
             where: {
                 id,
-                Component: {
-                    page: {
-                        userId,
+                components: {
+                    some: {
+                        page: {
+                            userId,
+                        },
                     },
                 },
             },
@@ -71,9 +88,11 @@ export class IncidentService {
         const incident = await this.prisma.incident.findFirst({
             where: {
                 id,
-                Component: {
-                    page: {
-                        userId,
+                components: {
+                    some: {
+                        page: {
+                            userId,
+                        },
                     },
                 },
             },
@@ -103,14 +122,15 @@ export class IncidentService {
         return updatedIncident;
     }
 
-
     async deleteIncident(id: number, userId: number) {
         const incident = await this.prisma.incident.findFirst({
             where: {
                 id,
-                Component: {
-                    page: {
-                        userId,
+                components: {
+                    some: {
+                        page: {
+                            userId,
+                        },
                     },
                 },
             },
@@ -140,7 +160,11 @@ export class IncidentService {
         }
 
         return this.prisma.incident.findMany({
-            where: { componentId },
+            where: {
+                components: {
+                    some: { id: componentId },
+                },
+            },
         });
     }
 
@@ -148,9 +172,11 @@ export class IncidentService {
         const incident = await this.prisma.incident.findFirst({
             where: {
                 id,
-                Component: {
-                    page: {
-                        userId,
+                components: {
+                    some: {
+                        page: {
+                            userId,
+                        },
                     },
                 },
             },

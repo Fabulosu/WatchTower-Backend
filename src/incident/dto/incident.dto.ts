@@ -1,4 +1,4 @@
-import { IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateIncidentDto {
     @IsString()
@@ -20,6 +20,18 @@ export class CreateIncidentDto {
     @IsOptional()
     @IsString()
     status?: string;
+
+    @IsArray()
+    @IsNotEmpty()
+    componentIds: number[];
+
+    @IsOptional()
+    @IsNumber()
+    statusCode?: number;
+
+    @IsOptional()
+    @IsString()
+    statusMessage?: string;
 }
 
 export class UpdateIncidentDto {

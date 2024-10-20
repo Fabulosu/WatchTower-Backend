@@ -6,8 +6,8 @@ export class CreateComponentDto {
     name: string;
 
     @IsString()
-    @IsNotEmpty()
-    description: string;
+    @IsOptional()
+    description?: string;
 
     @IsOptional()
     @IsInt()

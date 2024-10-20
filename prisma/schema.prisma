@@ -33,24 +33,23 @@ model Component {
   pageId        Int
   name          String
   status        Int        @default(0)
-  description   String
+  description   String?
   displayUptime Boolean    @default(true)
   createdAt     DateTime   @default(now())
-  incidents     Incident[]
+  incidents     Incident[] @relation("IncidentComponents")
 }
 
 model Incident {
-  id          Int              @id @default(autoincrement())
-  Component   Component        @relation(fields: [componentId], references: [id])
-  componentId Int
-  name        String
-  scheduleAt  DateTime?
-  resolvedAt  DateTime?
-  status      String           @default("INVESTIGATING")
-  severity    String           @default("MINOR")
-  history     IncidentStatus[]
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  id         Int              @id @default(autoincrement())
+  components Component[]      @relation("IncidentComponents")
+  name       String
+  scheduleAt DateTime?
+  resolvedAt DateTime?
+  status     String           @default("INVESTIGATING")
+  severity   String           @default("MINOR")
+  history    IncidentStatus[]
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
 }
 
 model IncidentStatus {
