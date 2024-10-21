@@ -26,7 +26,6 @@ export class IncidentService {
                 severity: dto.severity,
                 scheduleAt: dto.scheduleAt ? new Date(dto.scheduleAt) : undefined,
                 resolvedAt: dto.resolvedAt ? new Date(dto.resolvedAt) : undefined,
-                status: dto.status || 'OPEN',
                 components: {
                     connect: componentIds.map((id) => ({ id })),
                 },
@@ -67,7 +66,6 @@ export class IncidentService {
             where: { id },
             data: {
                 ...dto,
-                status: dto.status || incident.status,
             },
         });
 
@@ -105,9 +103,8 @@ export class IncidentService {
         const updatedIncident = await this.prisma.incident.update({
             where: { id },
             data: {
-                status: dto.status || incident.status,
                 severity: dto.severity,
-                resolvedAt: dto.status === 'RESOLVED' ? new Date() : null,
+                resolvedAt: dto.statusCode === 4 ? new Date() : null,
             },
         });
 

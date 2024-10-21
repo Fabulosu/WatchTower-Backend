@@ -45,7 +45,6 @@ model Incident {
   name       String
   scheduleAt DateTime?
   resolvedAt DateTime?
-  status     String           @default("INVESTIGATING")
   severity   String           @default("MINOR")
   history    IncidentStatus[]
   createdAt  DateTime         @default(now())

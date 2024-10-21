@@ -17,10 +17,6 @@ export class CreateIncidentDto {
     @IsDateString()
     resolvedAt?: string;
 
-    @IsOptional()
-    @IsString()
-    status?: string;
-
     @IsArray()
     @IsNotEmpty()
     componentIds: number[];
@@ -50,10 +46,6 @@ export class UpdateIncidentDto {
     @IsOptional()
     @IsDateString()
     resolvedAt?: string;
-
-    @IsOptional()
-    @IsString()
-    status?: string;
 
     @IsOptional()
     @IsString()
