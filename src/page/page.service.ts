@@ -15,6 +15,25 @@ export class PageService {
         });
     }
 
+    async getPages(userId: number) {
+        const pages = await this.prisma.page.findMany({
+            where: { userId },
+            include: {
+                components: {
+                    include: {
+                        incidents: {
+                            include: {
+                                history: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+        if (!pages) throw new NotFoundException('No pages found');
+        return pages;
+    };
+
     async getPage(id: number) {
         const page = await this.prisma.page.findUnique({
             where: { id },

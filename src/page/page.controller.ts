@@ -18,6 +18,12 @@ export class PageController {
         return await this.pageService.createPage(dto, userId);
     }
 
+    @UseGuards(JwtGuard)
+    @Get('user/:userId')
+    async getPages(@Param('userId') userId: number) {
+        return await this.pageService.getPages(userId);
+    }
+
     @Get(':id')
     async getPage(@Param('id') id: number) {
         return await this.pageService.getPage(id);
