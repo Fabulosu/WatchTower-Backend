@@ -28,6 +28,10 @@ export class CreateIncidentDto {
     @IsOptional()
     @IsString()
     statusMessage?: string;
+
+    @IsNumber()
+    @IsNotEmpty()
+    pageId: number;
 }
 
 export class UpdateIncidentDto {

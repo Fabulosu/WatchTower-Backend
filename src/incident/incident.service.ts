@@ -29,6 +29,7 @@ export class IncidentService {
                 components: {
                     connect: componentIds.map((id) => ({ id })),
                 },
+                pageId: dto.pageId
             },
         });
 
@@ -162,6 +163,26 @@ export class IncidentService {
                     some: { id: componentId },
                 },
             },
+        });
+    }
+
+    async getPageIncidents(pageId: number, userId: number) {
+        const page = await this.prisma.page.findFirst({
+            where: {
+                id: pageId,
+                userId: userId,
+            },
+        });
+
+        if (!page) {
+            throw new UnauthorizedException('This page does not belong to you.');
+        }
+
+        return this.prisma.incident.findMany({
+            where: { pageId },
+            include: {
+                history: true,
+            }
         });
     }
 

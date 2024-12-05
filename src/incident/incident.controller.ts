@@ -48,6 +48,12 @@ export class IncidentController {
         return await this.incidentService.getIncidents(componentId, userId);
     }
 
+    @Get('page/:pageId')
+    async getPageIncidents(@Param('pageId') pageId: number, @Req() req: Request) {
+        const userId = req['user'].id;
+        return await this.incidentService.getPageIncidents(pageId, userId);
+    }
+
     // Get Incident by ID
     @Get(':id')
     async getIncidentById(@Param('id') id: number, @Req() req: Request) {
