@@ -181,6 +181,7 @@ export class IncidentService {
         return this.prisma.incident.findMany({
             where: { pageId },
             include: {
+                components: true,
                 history: true,
             }
         });
