@@ -105,7 +105,7 @@ export class IncidentService {
             where: { id },
             data: {
                 severity: dto.severity,
-                resolvedAt: dto.statusCode === 4 ? new Date() : null,
+                resolvedAt: dto.statusCode === 3 ? new Date() : null,
             },
         });
 
@@ -199,6 +199,10 @@ export class IncidentService {
                     },
                 },
             },
+            include: {
+                components: true,
+                history: true,
+            }
         });
 
         if (!incident) {
