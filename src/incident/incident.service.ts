@@ -66,7 +66,16 @@ export class IncidentService {
         const updatedIncident = await this.prisma.incident.update({
             where: { id },
             data: {
-                ...dto,
+                name: dto.name,
+                severity: dto.severity,
+                scheduleAt: dto.scheduleAt ? new Date(dto.scheduleAt) : undefined,
+                resolvedAt: dto.resolvedAt ? new Date(dto.resolvedAt) : undefined,
+                components: dto.components ? {
+                    update: dto.components.map((component) => ({
+                        where: { id: component.id },
+                        data: { status: component.status },
+                    })),
+                } : undefined,
             },
         });
 
@@ -116,6 +125,15 @@ export class IncidentService {
                 incidentId: id,
             },
         });
+
+        if (dto.components) {
+            for (const component of dto.components) {
+                await this.prisma.component.update({
+                    where: { id: component.id },
+                    data: { status: component.status },
+                });
+            }
+        }
 
         return updatedIncident;
     }

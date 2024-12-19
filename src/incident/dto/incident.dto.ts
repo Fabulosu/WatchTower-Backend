@@ -58,4 +58,8 @@ export class UpdateIncidentDto {
     @IsOptional()
     @IsNumber()
     statusCode?: number;
+
+    @IsOptional()
+    @IsArray()
+    components?: { id: number; status: number }[];
 }
