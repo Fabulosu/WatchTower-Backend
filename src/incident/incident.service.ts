@@ -156,6 +156,10 @@ export class IncidentService {
             throw new NotFoundException('Incident not found or does not belong to you.');
         }
 
+        await this.prisma.incidentStatus.deleteMany({
+            where: { incidentId: id },
+        });
+
         return this.prisma.incident.delete({
             where: { id },
         });
