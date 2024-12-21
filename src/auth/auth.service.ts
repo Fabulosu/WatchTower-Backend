@@ -32,6 +32,7 @@ export class AuthService {
                     expiresIn: '7d',
                     secret: process.env.JWT_REFRESH_TOKEN,
                 }),
+                expiresIn: new Date().setTime(new Date().getTime() + 3600 * 1000),
             },
         };
     }
