@@ -35,6 +35,7 @@ export class ComponentController {
         return await this.componentService.getComponents(pageId);
     }
 
+    @UseGuards(JwtGuard)
     @Get(':id')
     async getComponentById(@Param('id') id: number, @Req() req: Request) {
         const userId = req['user'].id;
