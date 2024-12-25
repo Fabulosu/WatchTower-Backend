@@ -25,7 +25,7 @@ export class ComponentService {
 
         const newOrder = (highestOrder._max.order || 0) + 1;
 
-        return this.prisma.component.create({
+        const createdComponent = await this.prisma.component.create({
             data: {
                 ...dto,
                 order: newOrder,
@@ -34,7 +34,17 @@ export class ComponentService {
                 },
             },
         });
+
+        await this.prisma.componentStatus.create({
+            data: {
+                componentId: createdComponent.id,
+                status: 1,
+            },
+        });
+
+        return createdComponent;
     }
+
 
     async updateComponent(id: number, dto: UpdateComponentDto, userId: number) {
         const component = await this.prisma.component.findFirst({
@@ -50,12 +60,35 @@ export class ComponentService {
             throw new NotFoundException('Component not found or does not belong to you.');
         }
 
-        return this.prisma.component.update({
+        const updatedComponent = await this.prisma.component.update({
             where: { id },
             data: {
                 ...dto,
             },
         });
+
+        if (dto.status !== undefined && dto.status !== component.status) {
+            const lastComponentStatus = await this.prisma.componentStatus.findFirst({
+                where: { componentId: id },
+                orderBy: { assignedAt: 'desc' },
+            });
+
+            if (lastComponentStatus) {
+                await this.prisma.componentStatus.update({
+                    where: { id: lastComponentStatus.id },
+                    data: { removedAt: new Date() },
+                });
+            }
+
+            await this.prisma.componentStatus.create({
+                data: {
+                    componentId: id,
+                    status: dto.status,
+                },
+            });
+        }
+
+        return updatedComponent;
     }
 
     async updateComponentOrder(dto: UpdateComponentOrderDto, userId: number) {

@@ -29,16 +29,26 @@ model Page {
 }
 
 model Component {
-  id            Int        @id @default(autoincrement())
-  page          Page       @relation(fields: [pageId], references: [id])
+  id            Int               @id @default(autoincrement())
+  page          Page              @relation(fields: [pageId], references: [id])
   pageId        Int
   name          String
-  status        Int        @default(0)
+  status        Int               @default(0)
   description   String?
-  displayUptime Boolean    @default(true)
-  createdAt     DateTime   @default(now())
-  incidents     Incident[] @relation("IncidentComponents")
-  order         Int        @default(0)
+  displayUptime Boolean           @default(true)
+  createdAt     DateTime          @default(now())
+  incidents     Incident[]        @relation("IncidentComponents")
+  order         Int               @default(0)
+  statusHistory ComponentStatus[]
+}
+
+model ComponentStatus {
+  id          Int       @id @default(autoincrement())
+  Component   Component @relation(fields: [componentId], references: [id])
+  componentId Int
+  status      Int       @default(0)
+  assignedAt  DateTime  @default(now())
+  removedAt   DateTime?
 }
 
 model Incident {

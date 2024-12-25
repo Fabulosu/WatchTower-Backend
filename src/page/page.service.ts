@@ -44,7 +44,8 @@ export class PageService {
                             include: {
                                 history: true,
                             }
-                        }
+                        },
+                        statusHistory: true,
                     }
                 },
             }

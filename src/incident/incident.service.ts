@@ -70,14 +70,42 @@ export class IncidentService {
                 severity: dto.severity,
                 scheduleAt: dto.scheduleAt ? new Date(dto.scheduleAt) : undefined,
                 resolvedAt: dto.resolvedAt ? new Date(dto.resolvedAt) : undefined,
-                components: dto.components ? {
-                    update: dto.components.map((component) => ({
-                        where: { id: component.id },
-                        data: { status: component.status },
-                    })),
-                } : undefined,
             },
         });
+
+        if (dto.components) {
+            for (const component of dto.components) {
+                const existingComponent = await this.prisma.component.findUnique({
+                    where: { id: component.id },
+                });
+
+                if (existingComponent && existingComponent.status !== component.status) {
+                    const lastComponentStatus = await this.prisma.componentStatus.findFirst({
+                        where: { componentId: component.id },
+                        orderBy: { assignedAt: 'desc' },
+                    });
+
+                    if (lastComponentStatus) {
+                        await this.prisma.componentStatus.update({
+                            where: { id: lastComponentStatus.id },
+                            data: { removedAt: new Date() },
+                        });
+                    }
+
+                    await this.prisma.component.update({
+                        where: { id: component.id },
+                        data: { status: component.status },
+                    });
+
+                    await this.prisma.componentStatus.create({
+                        data: {
+                            componentId: component.id,
+                            status: component.status,
+                        },
+                    });
+                }
+            }
+        }
 
         if (dto.statusCode || dto.updateMessage) {
             await this.prisma.incidentStatus.create({
@@ -128,10 +156,35 @@ export class IncidentService {
 
         if (dto.components) {
             for (const component of dto.components) {
-                await this.prisma.component.update({
+                const existingComponent = await this.prisma.component.findUnique({
                     where: { id: component.id },
-                    data: { status: component.status },
                 });
+
+                if (existingComponent && existingComponent.status !== component.status) {
+                    const lastComponentStatus = await this.prisma.componentStatus.findFirst({
+                        where: { componentId: component.id },
+                        orderBy: { assignedAt: 'desc' },
+                    });
+
+                    if (lastComponentStatus) {
+                        await this.prisma.componentStatus.update({
+                            where: { id: lastComponentStatus.id },
+                            data: { removedAt: new Date() },
+                        });
+                    }
+
+                    await this.prisma.component.update({
+                        where: { id: component.id },
+                        data: { status: component.status },
+                    });
+
+                    await this.prisma.componentStatus.create({
+                        data: {
+                            componentId: component.id,
+                            status: component.status,
+                        },
+                    });
+                }
             }
         }
 
