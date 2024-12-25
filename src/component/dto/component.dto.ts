@@ -1,4 +1,5 @@
-import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsArray, IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
 
 export class CreateComponentDto {
     @IsString()
@@ -34,4 +35,19 @@ export class UpdateComponentDto {
     @IsOptional()
     @IsBoolean()
     displayUptime?: boolean;
+}
+
+export class ComponentOrder {
+    @IsInt()
+    componentId: number;
+
+    @IsInt()
+    newOrder: number;
+}
+
+export class UpdateComponentOrderDto {
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => ComponentOrder)
+    components: ComponentOrder[];
 }

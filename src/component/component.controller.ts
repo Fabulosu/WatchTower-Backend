@@ -1,11 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { ComponentService } from './component.service';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
-import { CreateComponentDto, UpdateComponentDto } from './dto/component.dto';
+import { CreateComponentDto, UpdateComponentDto, UpdateComponentOrderDto } from './dto/component.dto';
 import { Request } from 'express';
 
 @Controller('component')
-// @UseGuards(JwtGuard)
 export class ComponentController {
     constructor(private componentService: ComponentService) { }
 
@@ -17,7 +16,7 @@ export class ComponentController {
     }
 
     @UseGuards(JwtGuard)
-    @Put(':id')
+    @Put('update/:id')
     async updateComponent(@Param('id') id: number, @Body() dto: UpdateComponentDto, @Req() req: Request) {
         const userId = req['user'].id;
         return await this.componentService.updateComponent(id, dto, userId);
@@ -40,5 +39,12 @@ export class ComponentController {
     async getComponentById(@Param('id') id: number, @Req() req: Request) {
         const userId = req['user'].id;
         return await this.componentService.getComponentById(id, userId);
+    }
+
+    @UseGuards(JwtGuard)
+    @Put('order')
+    async updateComponentOrder(@Body() dto: UpdateComponentOrderDto, @Req() req: Request) {
+        const userId = req['user'].id;
+        return this.componentService.updateComponentOrder(dto, userId);
     }
 }

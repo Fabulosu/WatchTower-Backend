@@ -38,6 +38,7 @@ model Component {
   displayUptime Boolean    @default(true)
   createdAt     DateTime   @default(now())
   incidents     Incident[] @relation("IncidentComponents")
+  order         Int        @default(0)
 }
 
 model Incident {
