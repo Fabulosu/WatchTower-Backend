@@ -1,14 +1,18 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class CreatePageDto {
     @IsString()
     name: string;
 
+    @IsOptional()
     @IsString()
-    companyWebsite: string;
+    @IsUrl()
+    companyWebsite?: string;
 
+    @IsOptional()
     @IsString()
-    supportUrl: string;
+    @IsUrl()
+    supportUrl?: string;
 }
 
 export class UpdatePageDto {
@@ -17,10 +21,10 @@ export class UpdatePageDto {
     name?: string;
 
     @IsOptional()
-    @IsString()
+    @IsUrl()
     companyWebsite?: string;
 
     @IsOptional()
-    @IsString()
+    @IsUrl()
     supportUrl?: string;
 }

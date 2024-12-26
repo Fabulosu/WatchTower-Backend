@@ -22,8 +22,8 @@ model Page {
   components     Component[]
   incidents      Incident[]
   name           String
-  companyWebsite String
-  supportUrl     String
+  companyWebsite String?
+  supportUrl     String?
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
 }
