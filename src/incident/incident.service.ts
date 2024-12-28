@@ -24,7 +24,8 @@ export class IncidentService {
             data: {
                 name: dto.name,
                 severity: dto.severity,
-                scheduleAt: dto.scheduleAt ? new Date(dto.scheduleAt) : undefined,
+                scheduledAt: dto.scheduledAt ? new Date(dto.scheduledAt) : undefined,
+                completeAt: dto.completeAt ? new Date(dto.completeAt) : undefined,
                 resolvedAt: dto.resolvedAt ? new Date(dto.resolvedAt) : undefined,
                 components: {
                     connect: componentIds.map((id) => ({ id })),
@@ -68,7 +69,7 @@ export class IncidentService {
             data: {
                 name: dto.name,
                 severity: dto.severity,
-                scheduleAt: dto.scheduleAt ? new Date(dto.scheduleAt) : undefined,
+                scheduledAt: dto.scheduledAt ? new Date(dto.scheduledAt) : undefined,
                 resolvedAt: dto.resolvedAt ? new Date(dto.resolvedAt) : undefined,
             },
         });

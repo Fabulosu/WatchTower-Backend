@@ -52,17 +52,20 @@ model ComponentStatus {
 }
 
 model Incident {
-  id         Int              @id @default(autoincrement())
-  page       Page             @relation(fields: [pageId], references: [id])
-  pageId     Int
-  components Component[]      @relation("IncidentComponents")
-  name       String
-  scheduleAt DateTime?
-  resolvedAt DateTime?
-  severity   String           @default("MINOR")
-  history    IncidentStatus[]
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
+  id          Int              @id @default(autoincrement())
+  page        Page             @relation(fields: [pageId], references: [id])
+  pageId      Int
+  components  Component[]      @relation("IncidentComponents")
+  name        String
+  resolvedAt  DateTime?
+  severity    String           @default("MINOR")
+  history     IncidentStatus[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  scheduledAt DateTime?
+  auto_start  Boolean?         @default(true)
+  auto_end    Boolean?         @default(true)
+  completeAt  DateTime?
 }
 
 model IncidentStatus {

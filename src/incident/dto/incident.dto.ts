@@ -1,4 +1,4 @@
-import { IsArray, IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateIncidentDto {
     @IsString()
@@ -8,10 +8,6 @@ export class CreateIncidentDto {
     @IsString()
     @IsNotEmpty()
     severity: string;
-
-    @IsDateString()
-    @IsOptional()
-    scheduleAt: string;
 
     @IsOptional()
     @IsDateString()
@@ -32,6 +28,23 @@ export class CreateIncidentDto {
     @IsNumber()
     @IsNotEmpty()
     pageId: number;
+
+    // Only for maintenances
+    @IsDateString()
+    @IsOptional()
+    scheduledAt: string;
+
+    @IsBoolean()
+    @IsOptional()
+    auto_start: boolean;
+
+    @IsBoolean()
+    @IsOptional()
+    auto_end: boolean;
+
+    @IsDateString()
+    @IsOptional()
+    completeAt: string;
 }
 
 export class UpdateIncidentDto {
@@ -42,10 +55,6 @@ export class UpdateIncidentDto {
     @IsOptional()
     @IsString()
     severity?: string;
-
-    @IsOptional()
-    @IsDateString()
-    scheduleAt?: string;
 
     @IsOptional()
     @IsDateString()
@@ -62,4 +71,17 @@ export class UpdateIncidentDto {
     @IsOptional()
     @IsArray()
     components?: { id: number; status: number }[];
+
+    // Only for maintenances
+    @IsDateString()
+    @IsOptional()
+    scheduledAt: string;
+
+    @IsBoolean()
+    @IsOptional()
+    auto_start: boolean;
+
+    @IsBoolean()
+    @IsOptional()
+    auto_end: boolean;
 }
