@@ -8,10 +8,11 @@ import { PrismaService } from './prisma.service';
 import { PageModule } from './page/page.module';
 import { ComponentModule } from './component/component.module';
 import { IncidentModule } from './incident/incident.module';
+import { AutomationService } from './automation.service';
 
 @Module({
   imports: [ConfigModule.forRoot(), UserModule, AuthModule, PageModule, ComponentModule, IncidentModule],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService, PrismaService, AutomationService],
 })
-export class AppModule {}
+export class AppModule { }

@@ -27,6 +27,8 @@ export class IncidentService {
                 scheduledAt: dto.scheduledAt ? new Date(dto.scheduledAt) : undefined,
                 completeAt: dto.completeAt ? new Date(dto.completeAt) : undefined,
                 resolvedAt: dto.resolvedAt ? new Date(dto.resolvedAt) : undefined,
+                auto_start: dto.auto_start,
+                auto_end: dto.auto_end,
                 components: {
                     connect: componentIds.map((id) => ({ id })),
                 },
