@@ -8,13 +8,16 @@ export class UserService {
   constructor(private prisma: PrismaService) { }
 
   async create(dto: CreateUserDto) {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.user.findFirst({
       where: {
-        email: dto.email,
+        OR: [
+          { name: dto.name },
+          { email: dto.email },
+        ],
       },
     });
 
-    if (user) throw new ConflictException("email duplicated");
+    if (user) throw new ConflictException("There is already an account with this username or email!");
 
     const newUser = await this.prisma.user.create({
       data: {
@@ -41,5 +44,18 @@ export class UserService {
         id: id,
       },
     });
-  }
+  };
+
+  async findUser(username: string) {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        OR: [
+          { name: username },
+          { email: username },
+        ],
+      },
+    });
+
+    if (user) { return { exists: true } } else return { exists: false };
+  };
 }
